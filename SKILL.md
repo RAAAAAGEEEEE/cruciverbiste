@@ -64,7 +64,7 @@ Le skill n'affirme jamais « exact » : il dit quels niveaux ont été franchis.
 ## Comportement de repli
 
 - Plafond de dépense atteint : arrêt avant l'appel suivant, état conservé, relance possible.
-- Lot en échec (JSON illisible, erreur d'API) : nouvel essai jusqu'à quatre fois, puis lot signalé et sauté ; relancer la même commande ne refait que ce qui manque.
+- Lot en échec (JSON illisible, erreur d'API) : nouvel essai jusqu'à quatre fois pour une erreur du CLI (délai, binaire introuvable, sortie illisible) ; une réponse du modèle mal formée fait échouer le lot tout de suite, puis lot signalé et sauté ; relancer la même commande ne refait que ce qui manque.
 - Fiche Wikidata introuvable : candidat écarté (`--no-wikidata` pour passer outre, déconseillé).
 - Doute factuel : l'entrée est retirée, jamais « arrangée ».
 

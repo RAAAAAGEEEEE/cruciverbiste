@@ -9,7 +9,7 @@ Ce skill automatise une méthode appliquée à la main sur un jeu de duel de mot
 3. **Résolution à l'aveugle.** Plusieurs agents résolvent chaque définition sans voir la réponse (rubrique et nombre de lettres seulement, identifiants neutres). Taux de définitions signalées sur trois lots : 3,0 %, 4,9 % et 5,8 %. Causes : réponse concurrente de même longueur, précision manquante, fait douteux.
 4. **Réécriture.** Précisions du type « en version française » ou « nom original », ajout d'un détail qui exclut le concurrent, ou remplacement de l'angle.
 5. **Second contrôle à l'aveugle** sur les seules réécritures.
-6. **Relecture complète** par quatre relecteurs qui voient les réponses : faits, accords, rapport avec le thème. Sur environ 3 000 mots, 148 définitions ont été corrigées : 80 sans rapport avec le thème, 22 faits douteux, 12 ambiguës, 35 tournures ou accords. Les faits douteux sont les plus rares mais les plus coûteux.
+6. **Relecture complète** par quatre relecteurs qui voient les réponses : faits, accords, rapport avec le thème. Sur environ 3 000 mots, 148 définitions ont été corrigées d'après le journal d'origine (catégories susceptibles de se recouper) : 80 sans rapport avec le thème, 22 faits douteux, 12 ambiguës, 35 tournures ou accords. Les faits douteux sont les plus rares mais les plus coûteux.
 7. **Retrait sur doute.** Un mot dont un fait ou une graphie est douteux est retiré plutôt que corrigé à l'estime ; les personnes réelles identifiables ne sont pas acceptées comme réponses.
 8. **Reclassement en trois niveaux** et vérification de la recette de difficulté des grilles (portes, moyens, murs et pente).
 
@@ -22,7 +22,7 @@ Ce skill automatise une méthode appliquée à la main sur un jeu de duel de mot
 | contrôle mécanique | `lint_clues.py` appelé par `combine.py solve-input` |
 | résolution à l'aveugle | `solve` |
 | relecture avec réponses visibles, réécriture | `verify` (modèle plus capable) puis `fix-input` et revérification des corrections |
-| retrait sur doute | `finalize` (`--keep-on-doubt` désactive le retrait pour les définitions supplémentaires) |
+| retrait sur doute | `finalize` (`--keep-on-doubt`, mode `new` uniquement, garde le mot entier malgré un `drop` de cause `fait`) |
 
 La **recette de difficulté** (portes, moyens, murs selon la grille) et les règles de croisement ne sont pas dans le pipeline : elles se règlent dans le générateur de grilles du jeu (voir [difficulty-curve.md](difficulty-curve.md)).
 

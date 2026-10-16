@@ -37,7 +37,7 @@ export ANTHROPIC_API_KEY=...                   # votre clé ; jamais dans un fic
 python3 scripts/run_stage.py candidates candidats.jsonl --ledger registre.jsonl --cap 1 \
     --theme "Astronomie" --count 20 --min-len 4 --max-len 10
 python3 scripts/prepare_items.py candidats.jsonl entrees.jsonl --lang fr
-python3 scripts/run_stage.py draft-new entrees.jsonl brouillons.jsonl --ledger registre.jsonl --cap 2
+python3 scripts/run_stage.py draft-new entrees.jsonl brouillons.jsonl --ledger registre.jsonl --cap 2 --effort medium
 ```
 
 Pour l'installer comme skill Claude Code : [docs/INSTALLATION.md](docs/INSTALLATION.md). Un déroulé complet avec les sorties réelles : [examples/walkthrough.md](examples/walkthrough.md).

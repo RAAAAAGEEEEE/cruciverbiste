@@ -7,6 +7,7 @@ Voir aussi : [USAGE.md](USAGE.md), [CONFIGURATION.md](CONFIGURATION.md), [LIMITA
 | `ANTHROPIC_API_KEY absente de l'environnement` | variable non exportée dans ce terminal | exporter la clé ([INSTALLATION.md](INSTALLATION.md)) ; ne pas la mettre dans un fichier versionné |
 | `claude` introuvable | CLI non installé ou hors du `PATH` | installer Claude Code, ou définir `CRUCIVERBISTE_CLAUDE_CMD` avec le chemin du binaire |
 | `plafond atteint` / `stopped` non vide dans le résumé | le total du registre a atteint `--cap` | relire le coût avec `ledger_report.py`, puis relancer avec un plafond plus haut : la reprise saute ce qui est fait |
+| code de sortie 0 malgré un `failed_batches` non nul | `run_stage.py` ne renvoie pas d'erreur pour des lots échoués | lire `failed_batches` dans le résumé JSON, puis relancer |
 | `lot en échec : ...` sur la sortie d'erreur | réponse du modèle non analysable (JSON tronqué ou texte autour) | relancer la même commande ; si cela se répète, réduire `--batch` |
 | un lot écrit moins de lignes que d'entrées | le modèle a omis des `id` | relancer : les `id` absents sont retraités |
 | le coût dépasse de quelques centimes le plafond | appels déjà partis en parallèle | normal ; baisser `--workers` pour réduire l'écart |

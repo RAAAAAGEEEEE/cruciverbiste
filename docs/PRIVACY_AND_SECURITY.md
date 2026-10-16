@@ -7,7 +7,7 @@ Voir aussi : [../SECURITY.md](../SECURITY.md) (signaler une faille), [LIMITATION
 | Destination | Données | Quand |
 |---|---|---|
 | API Anthropic (via le CLI `claude`) | les réponses, rubriques, définitions, consignes du projet (`--constraints`) et règles de rédaction de chaque lot | à chaque étape à modèle |
-| `www.wikidata.org` | le terme cherché (l'indice Wikidata ou la graphie du candidat), rien d'autre | `prepare_items`, sauf `--no-wikidata` |
+| `www.wikidata.org` | la graphie du candidat (l'indice du modèle reste local), rien d'autre | `prepare_items`, sauf `--no-wikidata` |
 
 Rien d'autre n'est envoyé nulle part : pas de télémétrie, pas de dépôt de données. Les JSONL et le registre restent sur votre machine.
 

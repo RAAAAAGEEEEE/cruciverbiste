@@ -26,7 +26,7 @@ Voir aussi : [USAGE.md](USAGE.md), [ARCHITECTURE.md](ARCHITECTURE.md), [../.env.
 | `--language` | français | langue des définitions |
 | `--rules` | `prompts/rules.md` | fichier de règles de rédaction ; `prompts/rules.en.md` est fourni pour l'anglais |
 | `--levels` | `1, 2` | niveaux à écrire en `draft-extra` |
-| `--theme`, `--domain`, `--count`, `--min-len`, `--max-len`, `--avoid` | | `candidates` : thème, rubrique inscrite sur les candidats (défaut : le thème), nombre, bornes de longueur, liste à éviter |
+| `--theme`, `--domain`, `--count`, `--min-len`, `--max-len`, `--avoid` | `--count 60`, `--min-len 3`, `--max-len 13` | `candidates` : thème, rubrique inscrite sur les candidats (défaut : le thème), nombre, bornes de longueur, liste à éviter |
 
 ## `scripts/prepare_items.py <candidats> <sortie>`
 
@@ -39,6 +39,10 @@ Voir aussi : [USAGE.md](USAGE.md), [ARCHITECTURE.md](ARCHITECTURE.md), [../.env.
 - `fix-input <verify_in> <verified> <sortie>`
 - `finalize <items> <drafts> <verified> <accepted> <rejected> [--mode new|extra] [--min-clues N] [--keep-on-doubt] [--recheck f] [--max-len 80]`
 
+## `scripts/lint_clues.py`
+
+`python3 scripts/lint_clues.py <fichier JSONL>` contrôle des définitions seules (options : `--max-len`, défaut 80). Les autres scripts l'appellent déjà.
+
 ## `scripts/ledger_report.py <registre> [--cap N]`
 
 Affiche en JSON le total, le détail par étape et par modèle, et le reste sous le plafond.
@@ -50,4 +54,4 @@ Affiche en JSON le total, le détail par étape et par modèle, et le reste sous
 
 ## Choix de modèle et d'effort
 
-Les valeurs par défaut sont celles du lot de mesure décrit dans [USAGE.md](USAGE.md#coûts-mesurés). Baisser l'effort de rédaction (`medium`) réduit fortement le coût ; baisser celui de la vérification réduit aussi la sévérité (mesuré sur un lot de 50 mots).
+`--effort` n'a pas de valeur par défaut dans les scripts (celle du CLI s'applique) ; les coûts de [USAGE.md](USAGE.md#coûts-mesurés) ont été mesurés avec `--effort medium`, à passer explicitement. Baisser l'effort de rédaction (`medium`) réduit fortement le coût ; baisser celui de la vérification réduit aussi la sévérité (mesuré sur un lot de 50 mots).

@@ -15,6 +15,8 @@ Statut : alpha, version 0.1.1 (17/10/2026).
 
 - Testé en français ; une règle d'écriture en anglais est fournie mais n'a pas été mesurée. Les autres langues demandent un fichier de règles et un test.
 - Les domaines pointus ou récents (jeux, séries, culture de niche) sont les plus exposés aux erreurs et aux graphies divergentes.
+- Les prompts de rédaction gardent le cadre du projet d'origine (« parties de mots croisés en duel ») et `fact_check.md` parle de « graphies françaises officielles » quelle que soit `--language` : à adapter dans `prompts/` pour un autre cadre.
+- Le départage des homonymes Wikidata par mots communs peut se tromper (exemple observé : « Voie lactée » a reçu une fiche d'interprétations mythologiques au lieu de la galaxie) ; les homonymes sont transmis au rédacteur pour compenser.
 - Les jeux de mots et fausses pistes de niveau 3 sont la partie la moins fiable : à relire un par un.
 
 ## Périmètre
