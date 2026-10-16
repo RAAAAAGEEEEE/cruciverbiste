@@ -13,8 +13,10 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versionnement
 ### Corrigé (suite)
 - Une mise à jour du CLI `claude` pendant un long traitement (binaire momentanément introuvable) faisait planter l'étape ; elle est maintenant réessayée (jusqu'à quatre fois, au lieu de deux).
 
+- Une réponse du modèle suivie d'un second tableau ou d'une note (« Extra data ») faisait échouer un lot entier ; seul le premier JSON est lu maintenant.
+
 ### Modifié
-- 31 tests au lieu de 29.
+- 32 tests au lieu de 29.
 
 ## [0.1.0] - 2026-10-16
 

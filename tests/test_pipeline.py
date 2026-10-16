@@ -182,6 +182,10 @@ class PipelineTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             llm.extract_json("aucun json")
 
+    def test_extract_json_ignores_trailing_text_and_second_array(self):
+        self.assertEqual(llm.extract_json('[{"a": 1}]' + chr(10) + 'Note : [voir ci-dessus]'), [{"a": 1}])
+        self.assertEqual(llm.extract_json('Voici :' + chr(10) + '[{"a": 1}]' + chr(10) + '[{"b": 2}]'), [{"a": 1}])
+
 
 if __name__ == "__main__":
     unittest.main()

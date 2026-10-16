@@ -99,11 +99,16 @@ def ask(prompt: str, model: str, *, ledger: Path, cap: float, stage: str = "",
 
 
 def extract_json(text: str):
-    """Premier tableau ou objet JSON d'une réponse (tolère les blocs ```json)."""
+    """Premier tableau ou objet JSON d'une réponse (tolère les blocs ```json et le texte qui suit)."""
     start_candidates = [i for i in (text.find("["), text.find("{")) if i >= 0]
     if not start_candidates:
         raise ValueError("pas de JSON dans la réponse")
     start = min(start_candidates)
+    try:
+        value, _ = json.JSONDecoder().raw_decode(text[start:])
+        return value
+    except json.JSONDecodeError:
+        pass
     closer = "]" if text[start] == "[" else "}"
     end = text.rfind(closer)
     if end < start:
