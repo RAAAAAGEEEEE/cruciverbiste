@@ -15,7 +15,7 @@ Chaque flèche est un fichier JSONL (un objet JSON par ligne, UTF-8). Les étape
 
 | Fichier | Rôle |
 |---|---|
-| `scripts/llm.py` | appelle `claude -p --bare` (clé de `ANTHROPIC_API_KEY` uniquement, aucun outil, aucune session), journalise chaque appel dans un registre JSONL, refuse de partir si le plafond est atteint, réessaie quatre fois (délai, sortie illisible, commande momentanément introuvable) |
+| `scripts/llm.py` | appelle `claude -p --bare` (clé de `ANTHROPIC_API_KEY` uniquement, aucun outil, aucune session), journalise chaque appel dans un registre JSONL, refuse de partir si le plafond est atteint, réessaie quatre fois (délai, sortie illisible, erreur renvoyée par l'API, commande momentanément introuvable ; chaque essai est inscrit au registre des coûts) |
 | `scripts/run_stage.py` | une étape à modèle : lots, travailleurs parallèles, reprise (les `id` déjà écrits sont sautés), budget |
 | `scripts/prepare_items.py` | normalise les candidats (A à Z), filtre la longueur, écarte les doublons et les mots existants, ajoute la fiche Wikidata (CC0) |
 | `scripts/wikidata.py` | recherche d'une entité par `wbsearchentities`, cache local, pause entre requêtes |
@@ -30,7 +30,7 @@ Chaque flèche est un fichier JSONL (un objet JSON par ligne, UTF-8). Les étape
 
 **Candidat** (`candidates` écrit, `prepare_items` lit) : `{"theme", "domain", "form", "hint"}`.
 
-**Entrée** (`prepare_items` écrit) : `{"id", "answer", "display", "domain", "source": {"qid", "label", "description", "exact", "others"?}}`, où `others` liste jusqu'à trois fiches homonymes (`"Q… : description"`). `answer` est la réponse sans accent ni espace ; `display` est la graphie lisible si elle contient espace ou trait d'union (elle donne le motif de longueur « 4,5 » ou « 6-3 »). Pour compléter un mot existant (`draft-extra`), l'entrée porte aussi `clues`, la liste `{"level", "text"}` déjà en place.
+**Entrée** (`prepare_items` écrit) : `{"id", "answer", "display", "domain", "source": {"qid", "label", "description", "exact", "others"?}}`, où `exact` vaut `true` quand le libellé de la fiche est identique à la graphie (une fiche approximative est rejetée, jamais transmise) et `others` liste jusqu'à trois fiches homonymes (`"Q… : description"`). `answer` est la réponse sans accent ni espace ; `display` est la graphie lisible si elle contient espace ou trait d'union (elle donne le motif de longueur « 4,5 » ou « 6-3 »). Pour compléter un mot existant (`draft-extra`), l'entrée porte aussi `clues`, la liste `{"level", "text"}` déjà en place.
 
 **Brouillon** (`draft-new` / `draft-extra` écrit) : `draft-new` → `{"id", "familiarity", "clues": [{"level", "text"}]}` ; `draft-extra` → `{"id", "new": [...]}` ; ou `{"id", "skip": "raison"}` si le rédacteur renonce.
 

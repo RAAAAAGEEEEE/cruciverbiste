@@ -140,7 +140,7 @@ def cmd_fix_input(args: argparse.Namespace) -> int:
         original = originals.get(verdict["id"])
         if verdict.get("v") != "fix" or not verdict.get("text") or original is None:
             continue
-        problems, text = lint_clue(original["answer"], verdict["text"], original["others"], 80)
+        problems, text = lint_clue(original["answer"], verdict["text"], original["others"], args.max_len)
         if problems:
             continue  # la correction invalide sera rejetée à la finalisation
         rows.append({**original, "text": text, "others": original["others"], "guesses": []})
@@ -230,6 +230,7 @@ def main() -> int:
 
     p = sub.add_parser("fix-input")
     p.add_argument("verify_in"); p.add_argument("verified"); p.add_argument("output")
+    p.add_argument("--max-len", type=int, default=80)
     p.set_defaults(func=cmd_fix_input)
 
     p = sub.add_parser("finalize")

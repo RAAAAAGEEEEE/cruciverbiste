@@ -10,7 +10,7 @@ Usage :
       --min-len 3 --max-len 13 --lang fr --cache wd_cache.json
 
 `existants.txt` : une réponse par ligne (A-Z). Chaque ligne de sortie :
-  {"id", "answer", "display", "domain", "source": {"qid", "label", "description", "exact"}}
+  {"id", "answer", "display", "domain", "source": {"qid", "label", "description", "exact", "others"?}}
 """
 from __future__ import annotations
 
@@ -66,6 +66,12 @@ def prepare(rows: list[dict], existing: set[str], *, min_len: int, max_len: int,
             source = resolve(form, f"{row.get('hint', '')} {row.get('domain', '')}".strip())
             if source is None:
                 reason = "aucune fiche Wikidata"
+            elif source.get("unreachable"):
+                source = None
+                reason = "Wikidata injoignable (à retenter)"
+            elif source.get("exact") is False:
+                source = None
+                reason = "fiche Wikidata non concordante (seul un résultat approchant existe)"
         if reason:
             rejected.append({"form": form, "domain": row.get("domain", ""), "reason": reason})
             continue

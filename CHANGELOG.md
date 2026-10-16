@@ -2,6 +2,17 @@
 
 Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versionnement [SemVer](https://semver.org/lang/fr/).
 
+## [0.1.2] - 2026-10-17
+
+### Corrigé
+- Une fiche Wikidata approximative (nom non identique, par exemple « Comète de Hal » -> comète de Halley) n'est plus acceptée comme preuve d'existence : l'entrée est rejetée (« fiche Wikidata non concordante »). Une panne réseau de Wikidata a sa propre raison (« injoignable »).
+- `run_stage.py candidates` affiche un message clair (code de sortie 1) au lieu d'une trace Python quand l'appel au modèle échoue.
+- `combine.py fix-input` accepte `--max-len` (80 par défaut) comme les autres sous-commandes.
+- Documentation alignée sur les messages réels (dépannage), l'effet des options sur `candidates`, les essais répétés sur erreur d'API, le champ `exact`, un dossier de travail hors du dépôt.
+
+### Modifié
+- 33 tests.
+
 ## [0.1.1] - 2026-10-17
 
 ### Corrigé
@@ -10,7 +21,6 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versionnement
 ### Ajouté
 - Les fiches homonymes (jusqu'à trois) sont transmises au rédacteur et au vérificateur, qui ne rejette plus une définition parce qu'elle ne correspond pas à la fiche choisie.
 
-### Corrigé (suite)
 - Une mise à jour du CLI `claude` pendant un long traitement (binaire momentanément introuvable) faisait planter l'étape ; elle est maintenant réessayée (jusqu'à quatre fois, au lieu de deux).
 
 - Une réponse du modèle suivie d'un second tableau ou d'une note (« Extra data ») faisait échouer un lot entier ; seul le premier JSON est lu maintenant.

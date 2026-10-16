@@ -28,6 +28,8 @@ Voir aussi : [USAGE.md](USAGE.md), [ARCHITECTURE.md](ARCHITECTURE.md), [../.env.
 | `--levels` | `1, 2` | niveaux à écrire en `draft-extra` |
 | `--theme`, `--domain`, `--count`, `--min-len`, `--max-len`, `--avoid` | `--count 60`, `--min-len 3`, `--max-len 13` | `candidates` : thème, rubrique inscrite sur les candidats (défaut : le thème), nombre, bornes de longueur, liste à éviter |
 
+L'étape `candidates` ignore `--batch`, `--workers`, `--limit`, `--rules` et `--levels`.
+
 ## `scripts/prepare_items.py <candidats> <sortie>`
 
 `--existing` (fichier, une réponse A-Z par ligne, pour écarter les mots déjà en base), `--min-len` 3, `--max-len` 13, `--lang` fr (langue des libellés Wikidata), `--cache` (cache JSON des fiches), `--no-wikidata` (déconseillé : sans fiche, le rédacteur n'a plus de preuve d'existence). Écrit aussi `<sortie>.rejects`.
@@ -36,7 +38,7 @@ Voir aussi : [USAGE.md](USAGE.md), [ARCHITECTURE.md](ARCHITECTURE.md), [../.env.
 
 - `solve-input <items> <drafts> <sortie> [rejects] [--max-len 80]`
 - `verify-input <items> <drafts> <solved> <sortie> [--dropped f] [--drop-unsolved-level 1 ...] [--max-len 80]`
-- `fix-input <verify_in> <verified> <sortie>`
+- `fix-input <verify_in> <verified> <sortie> [--max-len 80]`
 - `finalize <items> <drafts> <verified> <accepted> <rejected> [--mode new|extra] [--min-clues N] [--keep-on-doubt] [--recheck f] [--max-len 80]`
 
 ## `scripts/lint_clues.py`

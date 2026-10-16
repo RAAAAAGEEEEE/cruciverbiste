@@ -209,7 +209,11 @@ def main() -> int:
             parser.error("candidates demande un fichier de sortie")
         if not args.theme:
             parser.error("candidates demande --theme")
-        stats = candidates(args)
+        try:
+            stats = candidates(args)
+        except (LlmError, BudgetExceeded) as exc:
+            print(f"échec : {exc}", file=sys.stderr)
+            return 1
     else:
         if not args.input or not args.output:
             parser.error("l'étape demande un fichier d'entrées et un fichier de sortie")

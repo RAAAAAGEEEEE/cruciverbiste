@@ -22,7 +22,7 @@ import urllib.request
 from pathlib import Path
 
 API = "https://www.wikidata.org/w/api.php"
-USER_AGENT = "cruciverbiste-skill/0.1 (https://github.com/RAAAAAGEEEEE/cruciverbiste)"
+USER_AGENT = "cruciverbiste-skill/0.1.2 (https://github.com/RAAAAAGEEEEE/cruciverbiste)"
 MIN_DELAY = 0.25  # secondes entre deux appels réseau
 
 
@@ -100,4 +100,4 @@ def polite_lookup(term: str, **kwargs) -> dict | None:
             return lookup(term, **kwargs)
         except (urllib.error.URLError, TimeoutError, json.JSONDecodeError):
             time.sleep(3 * (attempt + 1))
-    return None
+    return {"unreachable": True}

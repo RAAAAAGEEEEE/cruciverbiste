@@ -4,3 +4,5 @@ __pycache__/
 *.ledger.jsonl
 ledger.jsonl
 wd_cache.json
+/*.jsonl
+*.rejects

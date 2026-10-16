@@ -99,6 +99,17 @@ class PrepareTests(unittest.TestCase):
             self.assertIn(expected, reasons)
         self.assertEqual(len(rejected), 5)
 
+    def test_prepare_rejects_approximate_and_unreachable(self):
+        rows = [{"form": "Comète de Hal", "domain": "ciel"}, {"form": "Orion", "domain": "ciel"},
+                {"form": "Vega", "domain": "ciel"}]
+        fiches = {"Comète de Hal": {"qid": "Q1", "exact": False}, "Orion": {"unreachable": True},
+                  "Vega": {"qid": "Q2", "exact": True}}
+        kept, rejected = prepare(rows, set(), min_len=3, max_len=13, resolve=lambda t, c="": fiches[t])
+        self.assertEqual([k["answer"] for k in kept], ["VEGA"])
+        reasons = " | ".join(r["reason"] for r in rejected)
+        self.assertIn("non concordante", reasons)
+        self.assertIn("injoignable", reasons)
+
     def test_prepare_without_wikidata(self):
         kept, rejected = prepare([{"form": "Zelda", "domain": "jeux"}], set(), min_len=3, max_len=13)
         self.assertEqual(len(kept), 1)
