@@ -95,7 +95,7 @@ def cmd_solve_input(args: argparse.Namespace) -> int:
 
 
 def solved_guess(guesses: list[str], answer: str) -> bool:
-    return answer in {normalize(g).replace(" ", "") for g in guesses}
+    return answer in {normalize(g).replace(" ", "") for g in list(guesses)[:3]}
 
 
 def cmd_verify_input(args: argparse.Namespace) -> int:
@@ -196,7 +196,7 @@ def cmd_finalize(args: argparse.Namespace) -> int:
                 factual_doubt = True
             if verdict.get("v") == "fix" and verdict.get("text"):
                 again = rechecks.get(cid, {}) if rechecks is not None else {}
-                if rechecks is not None and (again.get("v") != "ok" or again.get("for") not in (None, verdict["text"])):
+                if rechecks is not None and (again.get("v") != "ok" or again.get("for") not in (None, verdict["text"], lint_clue(item["answer"], verdict["text"], [], args.max_len)[1])):
                     if again.get("v") == "drop" and doubtful_cause(again.get("cause")) or again.get("v") not in (None, "ok", "fix", "drop") \
                             or again.get("v") == "fix" and str(again.get("cause") or "").strip().lower() == "fait":
                         factual_doubt = True

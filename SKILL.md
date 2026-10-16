@@ -5,7 +5,7 @@ description: Produit et contrôle des définitions de mots croisés (et de jeux 
 
 # cruciverbiste
 
-Version 0.1.6 (17/10/2026). Documentation complète : `README.md` et `docs/`.
+Version 0.1.7 (17/10/2026). Documentation complète : `README.md` et `docs/`.
 
 ## Périmètre
 
@@ -54,7 +54,7 @@ Réglages recommandés (mesurés le 16/10/2026 sur un lot de 50 mots, voir `docs
 ## Niveaux de preuve d'une définition acceptée
 
 1. lint mécanique (longueur, fuite de la réponse, doublon, tiret long) ;
-2. résolue à l'aveugle (la réponse figure parmi les propositions d'un résolveur qui ne la voit pas) : exigé pour le niveau 1 (écarté sinon, `--drop-unsolved-level`) ; les niveaux 2 et 3 non résolus passent à la vérification, car un mur peut légitimement échapper au résolveur ;
+2. résolue à l'aveugle (la réponse figure parmi les propositions d'un résolveur qui ne la voit pas) : exigé pour le niveau 1 tel que rédigé (écarté sinon, `--drop-unsolved-level`) ; une correction du vérificateur est seulement revérifiée, pas résolue de nouveau ; les niveaux 2 et 3 non résolus passent à la vérification, car un mur peut légitimement échapper au résolveur ;
 3. vérifiée par un second modèle (fait, unicité, fuite) ;
 4. pour une correction : revérifiée après correction (avec `--recheck` ; sans cette option, une correction est gardée non revérifiée) ;
 5. pour un mot nouveau : fiche Wikidata (identifiant conservé) ;

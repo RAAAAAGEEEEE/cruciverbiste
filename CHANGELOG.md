@@ -2,6 +2,16 @@
 
 Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versionnement [SemVer](https://semver.org/lang/fr/).
 
+## [0.1.7] - 2026-10-17
+
+### Corrigé
+- Une bonne correction (apostrophe ou point final normalisés par le contrôle mécanique) n'est plus rejetée à tort à la revérification.
+- Seules les trois premières propositions du résolveur comptent.
+- Documentation : la résolution à l'aveugle porte sur le texte rédigé, une correction du vérificateur est seulement revérifiée (`SKILL.md`, `ARCHITECTURE.md` : champ `for`).
+
+### Modifié
+- 43 tests (verdict absent, minimum de définitions, verdict par défaut).
+
 ## [0.1.6] - 2026-10-17
 
 ### Corrigé

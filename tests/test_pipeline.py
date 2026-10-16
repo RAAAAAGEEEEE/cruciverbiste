@@ -217,6 +217,16 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(out["dropped_unsolved"], 2, "niveau 1 non résolu et résolution périmée")
         self.assertEqual(sorted(r["id"] for r in read_jsonl(self.dir / "verify_in.jsonl")), ["KILO#2#1", "KILO#3#3"])
 
+    def test_missing_verdict_and_default_verdict_remove_the_clue(self):
+        self.clues4("MIKE")
+        write_jsonl(self.dir / "verified.jsonl", [{"id": "MIKE#1#0", "v": "ok"}, {"id": "MIKE#2#1", "v": "ok"}, {"id": "MIKE#3#3", "v": "ok"}])
+        for extra in (("--mode", "extra"), ()):
+            texts = [c["text"] for c in self.finalize(*extra)[0]["clues"]]
+            self.assertEqual(texts, ["Porte nette", "Moyen précis", "Allusion fine"], "sans verdict : définition rejetée")
+        self.assertEqual(self.finalize("--min-clues", "4"), [], "minimum de définitions exigé")
+        import run_stage
+        self.assertEqual(run_stage.parse_item("verify", {}, {"id": "X#1#0", "text": "t"})["v"], "drop", "réponse sans verdict : drop")
+
     def test_stages_record_the_judged_text(self):
         write_jsonl(self.dir / "items.jsonl", [{"id": "LIMA", "answer": "LIMA", "display": "", "domain": "d", "clues": []}])
         write_jsonl(self.dir / "solve_in.jsonl", [{"id": "LIMA#1#0", "pattern": "4", "domain": "d", "text": "Porte nette", "answer": "LIMA"}])

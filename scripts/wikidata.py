@@ -22,7 +22,7 @@ import urllib.request
 from pathlib import Path
 
 API = "https://www.wikidata.org/w/api.php"
-USER_AGENT = "cruciverbiste-skill/0.1.6 (https://github.com/RAAAAAGEEEEE/cruciverbiste)"
+USER_AGENT = "cruciverbiste-skill/0.1.7 (https://github.com/RAAAAAGEEEEE/cruciverbiste)"
 MIN_DELAY = 0.25  # secondes entre deux appels réseau
 
 
