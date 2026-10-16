@@ -47,7 +47,7 @@ def variants(answer: str) -> set[str]:
 
 
 def prepare(rows: list[dict], existing: set[str], *, min_len: int, max_len: int, resolve=None) -> tuple[list[dict], list[dict]]:
-    """Renvoie (entrées retenues, rejets). `resolve(terme)` renvoie une fiche ou None ; None = pas de fiche exigée."""
+    """Renvoie (entrées retenues, rejets). `resolve(terme, contexte)` renvoie une fiche ou None ; None = pas de fiche exigée."""
     kept: list[dict] = []
     rejected: list[dict] = []
     seen: set[str] = set(existing)
@@ -63,7 +63,7 @@ def prepare(rows: list[dict], existing: set[str], *, min_len: int, max_len: int,
         elif variants(answer) & seen:
             reason = "doublon ou variante d'une réponse existante"
         elif resolve is not None:
-            source = resolve(str(row.get("hint") or form))
+            source = resolve(form, f"{row.get('hint', '')} {row.get('domain', '')}".strip())
             if source is None:
                 reason = "aucune fiche Wikidata"
         if reason:
@@ -96,7 +96,7 @@ def main() -> int:
         existing = {line.strip().upper() for line in Path(args.existing).read_text(encoding="utf-8").splitlines() if line.strip()}
     rows = [json.loads(line) for line in Path(args.candidates).read_text(encoding="utf-8").splitlines() if line.strip()]
     cache = Path(args.cache) if args.cache else None
-    resolve = None if args.no_wikidata else (lambda term: polite_lookup(term, lang=args.lang, cache=cache))
+    resolve = None if args.no_wikidata else (lambda term, context: polite_lookup(term, lang=args.lang, cache=cache, context=context))
     kept, rejected = prepare(rows, existing, min_len=args.min_len, max_len=args.max_len, resolve=resolve)
     with Path(args.output).open("w", encoding="utf-8") as handle:
         for item in kept:

@@ -84,6 +84,8 @@ def item_line(stage: str, item: dict) -> str:
     elif stage == "draft-new":
         source = item.get("source", {})
         base["fiche"] = f"{source.get('qid', '')} : {source.get('description', '')}".strip(" :")
+        if source.get("others"):
+            base["homonymes"] = source["others"]
     elif stage == "verify":
         base["niveau"] = item["level"]
         base["texte"] = item["text"]

@@ -30,7 +30,7 @@ Chaque flèche est un fichier JSONL (un objet JSON par ligne, UTF-8). Les étape
 
 **Candidat** (`candidates` écrit, `prepare_items` lit) : `{"theme", "domain", "form", "hint"}`.
 
-**Entrée** (`prepare_items` écrit) : `{"id", "answer", "display", "domain", "source": {"qid", "description"}}`. `answer` est la réponse sans accent ni espace ; `display` est la graphie lisible si elle contient espace ou trait d'union (elle donne le motif de longueur « 4,5 » ou « 6-3 »). Pour compléter un mot existant (`draft-extra`), l'entrée porte aussi `clues`, la liste `{"level", "text"}` déjà en place.
+**Entrée** (`prepare_items` écrit) : `{"id", "answer", "display", "domain", "source": {"qid", "label", "description", "exact", "others"?}}`, où `others` liste jusqu'à trois fiches homonymes (`"Q… : description"`). `answer` est la réponse sans accent ni espace ; `display` est la graphie lisible si elle contient espace ou trait d'union (elle donne le motif de longueur « 4,5 » ou « 6-3 »). Pour compléter un mot existant (`draft-extra`), l'entrée porte aussi `clues`, la liste `{"level", "text"}` déjà en place.
 
 **Brouillon** (`draft-new` / `draft-extra` écrit) : `draft-new` → `{"id", "familiarity", "clues": [{"level", "text"}]}` ; `draft-extra` → `{"id", "new": [...]}` ; ou `{"id", "skip": "raison"}` si le rédacteur renonce.
 

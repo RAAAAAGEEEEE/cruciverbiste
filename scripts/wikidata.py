@@ -42,33 +42,50 @@ def _search(term: str, lang: str) -> list[dict]:
         return json.load(response).get("search", [])
 
 
-def _pick(hits: list[dict], wanted: str) -> dict | None:
-    """Première fiche dont le libellé ou l'alias concorde avec la graphie voulue, sinon la première."""
+def _tokens(text: str) -> set[str]:
+    """Mots significatifs (4 lettres ou plus, sans accents) d'un texte libre."""
+    decomposed = unicodedata.normalize("NFKD", text)
+    ascii_text = "".join(c for c in decomposed if not unicodedata.combining(c))
+    return {w for w in re.findall(r"[a-z0-9]+", ascii_text.lower()) if len(w) >= 4}
+
+
+def _pick(hits: list[dict], wanted: str, context: str = "") -> dict | None:
+    """Fiche dont le libellé ou l'alias concorde avec la graphie voulue ; entre homonymes, celle dont
+    la description partage le plus de mots avec `context` (indice et rubrique) ; sinon la première."""
+    exact = []
     for hit in hits:
         names = [hit.get("label", ""), (hit.get("match") or {}).get("text", "")]
         if any(fold(name) == wanted for name in names if name):
-            return {**hit, "exact": True}
+            exact.append(hit)
+    if exact:
+        wanted_words = _tokens(context)
+        best = max(exact, key=lambda h: len(wanted_words & _tokens(h.get("description", ""))))
+        others = [f"{h.get('id', '')} : {h.get('description', '')}".strip(" :") for h in exact if h is not best][:3]
+        return {**best, "exact": True, "others": others}
     return {**hits[0], "exact": False} if hits else None
 
 
-def lookup(term: str, *, lang: str = "fr", cache: Path | None = None, search=_search) -> dict | None:
-    """Fiche Wikidata de `term`, ou None. `search` est injectable pour les tests."""
+def lookup(term: str, *, lang: str = "fr", cache: Path | None = None, search=_search, context: str = "") -> dict | None:
+    """Fiche Wikidata de `term`, ou None. `context` (indice, rubrique) départage les homonymes ;
+    `search` est injectable pour les tests."""
     store: dict = {}
-    key = f"{lang}|{term}"
+    key = f"{lang}|{term}|{context}"
     if cache and cache.exists():
         store = json.loads(cache.read_text(encoding="utf-8"))
         if key in store:
             return store[key]
     wanted = fold(term)
-    hit = _pick(search(term, lang), wanted)
+    hit = _pick(search(term, lang), wanted, context)
     if hit and not hit.get("description") and lang != "en":
-        english = _pick(search(term, "en"), wanted)
+        english = _pick(search(term, "en"), wanted, context)
         if english and english.get("id") == hit.get("id"):
             hit["description"] = english.get("description", "")
     result = None
     if hit:
         result = {"qid": hit.get("id", ""), "label": hit.get("label", ""),
                   "description": hit.get("description", ""), "exact": bool(hit.get("exact"))}
+        if hit.get("others"):
+            result["others"] = hit["others"]
     if cache:
         store[key] = result
         cache.write_text(json.dumps(store, ensure_ascii=False, indent=1), encoding="utf-8")

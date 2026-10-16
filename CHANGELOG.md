@@ -2,6 +2,17 @@
 
 Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versionnement [SemVer](https://semver.org/lang/fr/).
 
+## [0.1.1] - 2026-10-17
+
+### Corrigé
+- `prepare_items` cherchait dans Wikidata l'indice descriptif du modèle (« Orion constellation ») au lieu de la graphie du candidat : 13 candidats sur 20 étaient écartés à tort (lot réel du 16/10/2026). Il cherche maintenant la graphie et utilise l'indice et la rubrique pour départager les homonymes.
+
+### Ajouté
+- Les fiches homonymes (jusqu'à trois) sont transmises au rédacteur et au vérificateur, qui ne rejette plus une définition parce qu'elle ne correspond pas à la fiche choisie.
+
+### Modifié
+- 30 tests au lieu de 29 (ajout du départage des homonymes).
+
 ## [0.1.0] - 2026-10-16
 
 Première version publique (alpha).

@@ -123,6 +123,8 @@ def cmd_verify_input(args: argparse.Namespace) -> int:
                    "guesses": guesses}
             if src:
                 row["source"] = f"{src.get('qid', '')} : {src.get('description', '')}".strip(" :")
+                if src.get("others"):
+                    row["source"] += " (homonymes : " + " ; ".join(src["others"]) + ")"
             rows.append(row)
     write_jsonl(args.output, rows)
     if args.dropped:

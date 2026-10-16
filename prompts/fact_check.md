@@ -14,6 +14,8 @@ Verdicts possibles :
 - "fix" : le fait est juste mais la formulation est ambiguë ou maladroite ; donne une version corrigée (80 caractères au plus, mêmes règles, fait certain) dans "texte".
 - "drop" : fait faux, douteux ou invérifiable, ou réponse impossible à désambiguïser ; donne la raison courte dans "pourquoi" et la cause dans "cause" : "fait" (fait faux, douteux, invérifiable, ou réponse mal identifiée), "ambigu" (plusieurs réponses défendables), ou "autre" (fuite, niveau, style).
 
+La fiche de source n'est qu'un repère d'existence : elle peut désigner un homonyme (voir les homonymes indiqués). Ne rejette jamais une définition parce qu'elle ne correspond pas à la fiche ; juge le fait lui-même et la rubrique.
+
 Entrées (id, reponse, forme, rubrique, niveau, texte à contrôler, autres définitions du mot pour contexte, réponses du résolveur aveugle, fiche de source éventuelle) :
 {{items}}
 

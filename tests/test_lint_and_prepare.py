@@ -88,8 +88,8 @@ class PrepareTests(unittest.TestCase):
             {"form": "Inconnu total", "hint": "x", "domain": "jeux"},  # pas de fiche
         ]
 
-        def resolve(term):
-            return None if term == "x" else {"qid": "Q1", "description": "personnage"}
+        def resolve(term, context=""):
+            return None if term == "Inconnu total" else {"qid": "Q1", "description": "personnage"}
 
         kept, rejected = prepare(rows, {"ORC"}, min_len=3, max_len=13, resolve=resolve)
         self.assertEqual([k["answer"] for k in kept], ["ZELDA"])
@@ -131,6 +131,15 @@ class WikidataTests(unittest.TestCase):
             return [{"id": "Q1", "label": "Zelda", "description": "" if lang == "fr" else "princess"}]
 
         self.assertEqual(lookup("Zelda", search=fake_search)["description"], "princess")
+
+    def test_lookup_uses_context_to_choose_between_homonyms(self):
+        def fake_search(term, lang):
+            return [{"id": "Q1", "label": "Saturne", "description": "chanson de rap sortie en 2016"},
+                    {"id": "Q2", "label": "Saturne", "description": "sixième planète du Système solaire"}]
+
+        self.assertEqual(lookup("Saturne", search=fake_search)["qid"], "Q1")  # sans contexte : la première
+        self.assertEqual(lookup("Saturne", search=fake_search, context="Saturne planète Astronomie")["qid"], "Q2")
+        self.assertEqual(lookup("Saturne", search=fake_search)["others"], ["Q2 : sixième planète du Système solaire"])
 
     def test_lookup_no_hit(self):
         self.assertIsNone(lookup("Rien", search=lambda term, lang: []))
