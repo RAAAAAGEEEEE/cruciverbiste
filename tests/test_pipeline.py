@@ -133,6 +133,19 @@ class PipelineTests(unittest.TestCase):
         kept = read_jsonl(self.dir / "accepted.jsonl")
         self.assertEqual([c["text"] for c in kept[0]["clues"]], ["Porte nette"])
 
+    def test_drop_without_known_cause_removes_word_in_new_mode(self):
+        for cause in (None, "Fait", "factuel"):
+            items = [{"id": "GOLF", "answer": "GOLF", "display": "", "domain": "d", "clues": []}]
+            write_jsonl(self.dir / "items.jsonl", items)
+            write_jsonl(self.dir / "drafts.jsonl", [{"id": "GOLF", "familiarity": 1, "clues": [
+                {"level": 1, "text": "Porte nette"}, {"level": 2, "text": "Moyen précis"}, {"level": 3, "text": "Allusion fine"}]}])
+            drop = {"id": "GOLF#2#0", "v": "drop", "why": "x"}
+            if cause:
+                drop["cause"] = cause
+            write_jsonl(self.dir / "verified.jsonl", [{"id": "GOLF#1#0", "v": "ok"}, drop, {"id": "GOLF#3#0", "v": "ok"}])
+            self.run_script("combine.py", "finalize", "items.jsonl", "drafts.jsonl", "verified.jsonl", "accepted.jsonl", "rejected.jsonl")
+            self.assertEqual(read_jsonl(self.dir / "accepted.jsonl"), [], f"cause {cause!r} : mot retiré")
+
     def test_resume_only_processes_missing_items(self):
         items = [{"id": f"MOT{i}", "answer": f"MOT{i}", "display": "", "domain": "d", "clues": []} for i in range(4)]
         write_jsonl(self.dir / "items.jsonl", items)

@@ -5,7 +5,7 @@ description: Produit et contrôle des définitions de mots croisés (et de jeux 
 
 # cruciverbiste
 
-Version 0.1.3 (17/10/2026). Documentation complète : `README.md` et `docs/`.
+Version 0.1.4 (17/10/2026). Documentation complète : `README.md` et `docs/`.
 
 ## Périmètre
 

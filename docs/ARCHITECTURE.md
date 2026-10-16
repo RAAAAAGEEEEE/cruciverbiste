@@ -48,7 +48,7 @@ Chaque flèche est un fichier JSONL (un objet JSON par ligne, UTF-8). Les étape
 
 1. Une définition qui échoue au lint est rejetée.
 2. Sans verdict (résolution ou vérification absente), elle est rejetée.
-3. `drop` la rejette ; en mode `new`, un `drop` de cause `fait` retire **tout le mot**, sauf avec `--keep-on-doubt`.
+3. `drop` la rejette ; en mode `new`, un `drop` dont la cause est `fait`, absente ou inconnue (autre que `ambigu` et `autre`) retire **tout le mot**, sauf avec `--keep-on-doubt`. Un verdict inconnu, ou `fix` sans texte, est rejeté et compte de la même façon.
 4. `fix` remplace le texte, à condition que le nouveau texte passe le lint et, avec `--recheck`, que la revérification réponde `ok`.
 5. En mode `new`, un mot garde au moins deux définitions dont une de niveau 1 ou 2 (`--min-clues` change le minimum) ; en mode `extra`, une définition suffit.
 

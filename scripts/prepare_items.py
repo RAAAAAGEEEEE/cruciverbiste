@@ -69,7 +69,7 @@ def prepare(rows: list[dict], existing: set[str], *, min_len: int, max_len: int,
             elif source.get("unreachable"):
                 source = None
                 reason = "Wikidata injoignable (à retenter)"
-            elif source.get("exact") is False:
+            elif source.get("exact") is not True:
                 source = None
                 reason = "fiche Wikidata non concordante (seul un résultat approchant existe)"
         if reason:

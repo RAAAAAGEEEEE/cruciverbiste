@@ -116,7 +116,7 @@ def parse_item(stage: str, raw: dict, item: dict) -> dict:
         if raw.get("pourquoi"):
             out["why"] = str(raw["pourquoi"])
         if raw.get("cause"):
-            out["cause"] = str(raw["cause"])
+            out["cause"] = str(raw["cause"]).strip().lower()
     return out
 
 

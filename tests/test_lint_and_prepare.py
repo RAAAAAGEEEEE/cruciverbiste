@@ -89,7 +89,7 @@ class PrepareTests(unittest.TestCase):
         ]
 
         def resolve(term, context=""):
-            return None if term == "Inconnu total" else {"qid": "Q1", "description": "personnage"}
+            return None if term == "Inconnu total" else {"qid": "Q1", "description": "personnage", "exact": True}
 
         kept, rejected = prepare(rows, {"ORC"}, min_len=3, max_len=13, resolve=resolve)
         self.assertEqual([k["answer"] for k in kept], ["ZELDA"])

@@ -2,6 +2,16 @@
 
 Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versionnement [SemVer](https://semver.org/lang/fr/).
 
+## [0.1.4] - 2026-10-17
+
+### Corrigé
+- Un `drop` sans cause, ou avec une cause imprévue (« Fait », « factuel »), ne retirait pas le mot en mode `new` : seules `ambigu` et `autre` l'épargnent maintenant. La cause est normalisée en minuscules.
+- Une fiche sans champ `exact` n'est plus acceptée comme preuve d'existence.
+- Documentation : message de plafond réel, sortie d'erreur UTF-8, chemins de `USAGE.md` (`$SKILL`), exemple de sortie complet, règle 3 d'ARCHITECTURE.
+
+### Modifié
+- 37 tests.
+
 ## [0.1.3] - 2026-10-17
 
 ### Corrigé

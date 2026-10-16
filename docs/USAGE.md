@@ -11,21 +11,22 @@ Lancez les étapes sur 50 entrées avec `--limit 50`, lisez les rejets et le co�
 ## Mode `new` : nouveaux mots
 
 ```bash
+export SKILL=~/.claude/skills/cruciverbiste   # dossier du skill
 export L=registre.jsonl            # un seul registre pour toute la session
-python3 scripts/run_stage.py candidates candidats.jsonl --ledger $L --cap 50 \
+python3 $SKILL/scripts/run_stage.py candidates candidats.jsonl --ledger $L --cap 50 \
     --theme "Astronomie" --domain "astronomie" --count 60 --min-len 4 --max-len 10 \
-    --constraints examples/constraints.example.txt
-python3 scripts/prepare_items.py candidats.jsonl entrees.jsonl --existing deja_en_base.txt --lang fr
-python3 scripts/run_stage.py draft-new entrees.jsonl brouillons.jsonl --ledger $L --cap 50 --effort medium
-python3 scripts/combine.py solve-input entrees.jsonl brouillons.jsonl a_resoudre.jsonl rejets_lint.jsonl
-python3 scripts/run_stage.py solve a_resoudre.jsonl resolu.jsonl --ledger $L --cap 50 --effort medium
-python3 scripts/combine.py verify-input entrees.jsonl brouillons.jsonl resolu.jsonl a_verifier.jsonl --dropped non_resolues.jsonl
-python3 scripts/run_stage.py verify a_verifier.jsonl verdicts.jsonl --ledger $L --cap 50 --effort medium
-python3 scripts/combine.py fix-input a_verifier.jsonl verdicts.jsonl a_reverifier.jsonl
-python3 scripts/run_stage.py verify a_reverifier.jsonl reverifies.jsonl --ledger $L --cap 50 --effort medium
-python3 scripts/combine.py finalize entrees.jsonl brouillons.jsonl verdicts.jsonl acceptes.jsonl rejetes.jsonl \
+    --constraints $SKILL/examples/constraints.example.txt
+python3 $SKILL/scripts/prepare_items.py candidats.jsonl entrees.jsonl --existing deja_en_base.txt --lang fr
+python3 $SKILL/scripts/run_stage.py draft-new entrees.jsonl brouillons.jsonl --ledger $L --cap 50 --effort medium
+python3 $SKILL/scripts/combine.py solve-input entrees.jsonl brouillons.jsonl a_resoudre.jsonl rejets_lint.jsonl
+python3 $SKILL/scripts/run_stage.py solve a_resoudre.jsonl resolu.jsonl --ledger $L --cap 50 --effort medium
+python3 $SKILL/scripts/combine.py verify-input entrees.jsonl brouillons.jsonl resolu.jsonl a_verifier.jsonl --dropped non_resolues.jsonl
+python3 $SKILL/scripts/run_stage.py verify a_verifier.jsonl verdicts.jsonl --ledger $L --cap 50 --effort medium
+python3 $SKILL/scripts/combine.py fix-input a_verifier.jsonl verdicts.jsonl a_reverifier.jsonl
+python3 $SKILL/scripts/run_stage.py verify a_reverifier.jsonl reverifies.jsonl --ledger $L --cap 50 --effort medium
+python3 $SKILL/scripts/combine.py finalize entrees.jsonl brouillons.jsonl verdicts.jsonl acceptes.jsonl rejetes.jsonl \
     --mode new --recheck reverifies.jsonl
-python3 scripts/ledger_report.py $L --cap 50
+python3 $SKILL/scripts/ledger_report.py $L --cap 50
 ```
 
 `deja_en_base.txt` : une réponse A à Z par ligne (facultatif). `candidates` propose des idées de mots ; vous pouvez aussi écrire vous-même `candidats.jsonl` (une ligne `{"theme", "domain", "form", "hint"}` par mot). `prepare_items` interroge Wikidata, un candidat sans fiche est écarté et listé dans `entrees.jsonl.rejects`.
