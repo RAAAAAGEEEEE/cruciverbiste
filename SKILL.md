@@ -78,7 +78,7 @@ Exemple de sortie : `examples/sample_report.md`. Exemple complet de bout en bout
 
 ## Sécurité et confidentialité
 
-Les prompts (réponses, définitions, consignes) partent vers l'API Anthropic via le CLI `claude -p --bare` avec la clé de `ANTHROPIC_API_KEY`. Seul le terme cherché part vers Wikidata. La clé n'est jamais lue, écrite ni affichée par les scripts. Voir `docs/PRIVACY_AND_SECURITY.md`. Ne jamais mettre de données personnelles ni de contenu confidentiel dans les entrées.
+Les prompts (réponses, définitions, consignes) partent vers l'API Anthropic via le CLI `claude -p --bare` avec la clé de `ANTHROPIC_API_KEY`. Seul le terme cherché part vers Wikidata. La clé n'est jamais lue, écrite ni affichée par les scripts. Voir `docs/PRIVACY_AND_SECURITY.md`. Procédures PLAN/FIX/VERIFY : sans objet, le skill ne modifie aucun code ni fichier de production (il écrit des JSONL intermédiaires). Ne jamais mettre de données personnelles ni de contenu confidentiel dans les entrées.
 
 ## Installation
 
