@@ -120,6 +120,19 @@ class PipelineTests(unittest.TestCase):
         accepted = read_jsonl(self.dir / "accepted.jsonl")
         self.assertEqual([c["text"] for c in accepted[0]["clues"]], ["Moyen précis"])
 
+    def test_unexpected_verdicts_are_rejected(self):
+        items = [{"id": "FOXTROT", "answer": "FOXTROT", "display": "", "domain": "d", "clues": []}]
+        write_jsonl(self.dir / "items.jsonl", items)
+        write_jsonl(self.dir / "drafts.jsonl", [{"id": "FOXTROT", "familiarity": 1, "clues": [
+            {"level": 1, "text": "Porte nette"}, {"level": 2, "text": "Moyen précis"}, {"level": 3, "text": "Allusion fine"}]}])
+        write_jsonl(self.dir / "verified.jsonl", [
+            {"id": "FOXTROT#1#0", "v": "ok"}, {"id": "FOXTROT#2#0", "v": "doute"}, {"id": "FOXTROT#3#0", "v": "fix"}])
+        self.run_script("combine.py", "finalize", "items.jsonl", "drafts.jsonl", "verified.jsonl", "accepted.jsonl", "rejected.jsonl")
+        self.assertEqual(read_jsonl(self.dir / "accepted.jsonl"), [], "verdict inconnu ou « fix » sans texte : mot retiré")
+        self.run_script("combine.py", "finalize", "items.jsonl", "drafts.jsonl", "verified.jsonl", "accepted.jsonl", "rejected.jsonl", "--mode", "extra")
+        kept = read_jsonl(self.dir / "accepted.jsonl")
+        self.assertEqual([c["text"] for c in kept[0]["clues"]], ["Porte nette"])
+
     def test_resume_only_processes_missing_items(self):
         items = [{"id": f"MOT{i}", "answer": f"MOT{i}", "display": "", "domain": "d", "clues": []} for i in range(4)]
         write_jsonl(self.dir / "items.jsonl", items)

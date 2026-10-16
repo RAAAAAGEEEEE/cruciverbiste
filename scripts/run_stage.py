@@ -110,7 +110,7 @@ def parse_item(stage: str, raw: dict, item: dict) -> dict:
     elif stage == "solve":
         out["guesses"] = [str(g) for g in raw.get("reponses", [])]
     elif stage == "verify":
-        out["v"] = str(raw.get("v", "drop"))
+        out["v"] = str(raw.get("v", "drop")).strip().lower()
         if raw.get("texte"):
             out["text"] = str(raw["texte"])
         if raw.get("pourquoi"):
@@ -137,6 +137,8 @@ def run(stage: str, items: list[dict], out_path: Path, *, model: str, batch: int
                         items="\n".join(item_line(stage, it) for it in group))
         text = ask(prompt, model, ledger=ledger, cap=cap, stage=stage, effort=effort)
         data = extract_json(text)
+        if not isinstance(data, list):
+            raise ValueError("la réponse n'est pas un tableau JSON")
         by_id = {str(row.get("id")): row for row in data if isinstance(row, dict)}
         rows = [parse_item(stage, by_id[it["id"]], it) for it in group if it["id"] in by_id]
         with lock, out_path.open("a", encoding="utf-8") as handle:
@@ -155,7 +157,7 @@ def run(stage: str, items: list[dict], out_path: Path, *, model: str, batch: int
                 stats["stopped"] = str(exc)
                 for other in futures:
                     other.cancel()
-            except (LlmError, ValueError, KeyError, json.JSONDecodeError) as exc:
+            except (LlmError, ValueError, KeyError, TypeError, json.JSONDecodeError) as exc:
                 stats["failed_batches"] += 1
                 print(f"lot en échec : {exc}", file=sys.stderr)
     stats["spent_total"] = round(spent(ledger), 4)
@@ -211,7 +213,7 @@ def main() -> int:
             parser.error("candidates demande --theme")
         try:
             stats = candidates(args)
-        except (LlmError, BudgetExceeded) as exc:
+        except (LlmError, BudgetExceeded, ValueError) as exc:
             print(f"échec : {exc}", file=sys.stderr)
             return 1
     else:

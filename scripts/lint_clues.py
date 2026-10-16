@@ -69,7 +69,7 @@ def lint_clue(answer: str, text: str, existing: list[str] | None = None,
         problems.append(f"trop longue ({len(cleaned)} > {max_len})")
     if leaks_answer(answer, cleaned):
         problems.append("contient la réponse ou un dérivé")
-    if any(ch in cleaned for ch in "—–"):
+    if any(ch in cleaned for ch in "\u2014\u2013"):
         problems.append("tiret long (remplacer par une virgule ou deux-points)")
     if re.search(r"[\U0001F000-\U0001FFFF☀-➿]", cleaned):
         problems.append("emoji")

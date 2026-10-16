@@ -5,7 +5,7 @@ description: Produit et contrôle des définitions de mots croisés (et de jeux 
 
 # cruciverbiste
 
-Version 0.1.2 (17/10/2026). Documentation complète : `README.md` et `docs/`.
+Version 0.1.3 (17/10/2026). Documentation complète : `README.md` et `docs/`.
 
 ## Périmètre
 
@@ -64,7 +64,7 @@ Le skill n'affirme jamais « exact » : il dit quels niveaux ont été franchis.
 ## Comportement de repli
 
 - Plafond de dépense atteint : arrêt avant l'appel suivant, état conservé, relance possible.
-- Lot en échec (JSON illisible, erreur d'API) : nouvel essai jusqu'à quatre fois pour une erreur du CLI (délai, binaire introuvable, sortie illisible) ; une réponse du modèle mal formée fait échouer le lot tout de suite, puis lot signalé et sauté ; relancer la même commande ne refait que ce qui manque.
+- Lot en échec (JSON illisible, erreur d'API) : nouvel essai jusqu'à quatre fois pour une erreur du CLI ou de l'API (délai, binaire introuvable, sortie illisible, `is_error`) ; une réponse du modèle mal formée fait échouer le lot tout de suite, puis lot signalé et sauté ; relancer la même commande ne refait que ce qui manque.
 - Fiche Wikidata introuvable : candidat écarté (`--no-wikidata` pour passer outre, déconseillé).
 - Doute factuel : l'entrée est retirée, jamais « arrangée ».
 

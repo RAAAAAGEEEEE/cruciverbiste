@@ -2,7 +2,7 @@
 
 Skill pour Claude Code : écrire et contrôler des définitions de mots croisés dans la langue et sur le thème de votre choix, avec les techniques des verbicrucistes (le « verbicruciste » est la personne qui écrit les définitions d'une grille).
 
-Statut : **alpha (0.1.2, 17/10/2026)**. Les scripts sont testés hors ligne (33 tests) et le flux complet a été exécuté sur un lot de 50 entrées avec l'API réelle ; il n'a pas encore servi à des volumes publics. Voir [docs/LIMITATIONS.md](docs/LIMITATIONS.md).
+Statut : **alpha (0.1.3, 17/10/2026)**. Les scripts sont testés hors ligne (36 tests) et le flux complet a été exécuté sur un lot de 50 entrées avec l'API réelle ; il n'a pas encore servi à des volumes publics. Voir [docs/LIMITATIONS.md](docs/LIMITATIONS.md).
 
 ## Le problème
 
@@ -32,7 +32,7 @@ Créateurs de jeux de mots, de quiz et d'applications d'apprentissage qui mainti
 ```bash
 git clone https://github.com/RAAAAAGEEEEE/cruciverbiste.git
 cd cruciverbiste
-python3 -m unittest discover -s tests          # 33 tests, hors ligne, aucune clé requise
+python3 -m unittest discover -s tests          # 36 tests, hors ligne, aucune clé requise
 export ANTHROPIC_API_KEY=...                   # votre clé ; jamais dans un fichier du dépôt
 python3 scripts/run_stage.py candidates candidats.jsonl --ledger registre.jsonl --cap 1 \
     --theme "Astronomie" --count 20 --min-len 4 --max-len 10
@@ -50,7 +50,7 @@ Entrée (`entrees.jsonl`, une ligne) :
 {"id": "MARS", "answer": "MARS", "display": "", "domain": "astronomie", "source": {"qid": "Q111", "description": "planète du système solaire"}}
 ```
 
-Sortie acceptée (`accepted.jsonl`, exemple illustratif et abrégé : la ligne réelle recopie aussi `source`, voir [examples/](examples/)) :
+Sortie acceptée (`accepted.jsonl`, exemple illustratif, voir [examples/](examples/)) :
 
 ```json
 {"id": "MARS", "answer": "MARS", "domain": "astronomie", "familiarity": 1, "clues": [

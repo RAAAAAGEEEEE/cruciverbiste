@@ -174,7 +174,11 @@ def cmd_finalize(args: argparse.Namespace) -> int:
                 continue
             if verdict.get("v") == "drop":
                 rejected.append({"id": cid, "reason": f"vérificateur : {verdict.get('why', '')}", "cause": verdict.get("cause", ""), "text": clue["text"]})
-                factual_doubt = factual_doubt or verdict.get("cause") == "fait"
+                factual_doubt = factual_doubt or verdict.get("cause") in ("fait", "")
+                continue
+            if verdict.get("v") not in ("ok", "fix") or (verdict.get("v") == "fix" and not verdict.get("text")):
+                rejected.append({"id": cid, "reason": f"verdict inconnu ou incomplet : {verdict.get('v')!r}", "text": clue["text"]})
+                factual_doubt = True
                 continue
             text = clue["text"]
             if verdict.get("v") == "fix" and verdict.get("text"):

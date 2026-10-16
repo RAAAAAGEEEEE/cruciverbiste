@@ -24,7 +24,7 @@ Voir aussi : [USAGE.md](USAGE.md), [ARCHITECTURE.md](ARCHITECTURE.md), [../.env.
 | `--limit N` | tout | ne traiter que les N premières entrées (lot test) |
 | `--constraints` | aucun | fichier texte de consignes propres au projet (voir [../examples/constraints.example.txt](../examples/constraints.example.txt)) |
 | `--language` | français | langue des définitions |
-| `--rules` | `prompts/rules.md` | fichier de règles de rédaction ; `prompts/rules.en.md` est fourni pour l'anglais |
+| `--rules` | `prompts/rules.md` | fichier de règles de rédaction (rédaction seulement ; le vérificateur applique ses propres règles, dont les 80 caractères) ; `prompts/rules.en.md` est fourni pour l'anglais |
 | `--levels` | `1, 2` | niveaux à écrire en `draft-extra` |
 | `--theme`, `--domain`, `--count`, `--min-len`, `--max-len`, `--avoid` | `--count 60`, `--min-len 3`, `--max-len 13` | `candidates` : thème, rubrique inscrite sur les candidats (défaut : le thème), nombre, bornes de longueur, liste à éviter |
 

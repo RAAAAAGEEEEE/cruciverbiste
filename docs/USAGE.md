@@ -2,7 +2,7 @@
 
 Voir aussi : [CONFIGURATION.md](CONFIGURATION.md) (toutes les options), [ARCHITECTURE.md](ARCHITECTURE.md) (formats), [../examples/walkthrough.md](../examples/walkthrough.md) (déroulé), [TROUBLESHOOTING.md](TROUBLESHOOTING.md).
 
-Toutes les commandes se lancent depuis le dossier du skill (ou avec son chemin complet). Les noms de fichiers sont libres ; ceux-ci sont ceux de l'exemple. Prérequis : `ANTHROPIC_API_KEY` exportée ([INSTALLATION.md](INSTALLATION.md)).
+Lancez les scripts avec leur chemin complet depuis un dossier de travail à part, hors du dépôt du skill, pour que les fichiers JSONL produits n'y atterrissent pas (les exemples ci-dessous écrivent dans le dossier courant). Les noms de fichiers sont libres ; ceux-ci sont ceux de l'exemple. Prérequis : `ANTHROPIC_API_KEY` exportée ([INSTALLATION.md](INSTALLATION.md)).
 
 ## Règle d'or : un lot test avant le volume
 

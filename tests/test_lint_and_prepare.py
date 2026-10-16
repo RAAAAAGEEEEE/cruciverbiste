@@ -33,7 +33,7 @@ class LintTests(unittest.TestCase):
         self.assertTrue(any("trop longue" in p for p in problems))
 
     def test_em_dash_and_emoji_are_flagged(self):
-        problems, _ = lint_clue("ZELDA", "Princesse — d'Hyrule")
+        problems, _ = lint_clue("ZELDA", "Princesse \u2014 d'Hyrule")
         self.assertTrue(any("tiret long" in p for p in problems))
         problems, _ = lint_clue("ZELDA", "Princesse \U0001F451")
         self.assertTrue(any("emoji" in p for p in problems))
@@ -151,6 +151,14 @@ class WikidataTests(unittest.TestCase):
         self.assertEqual(lookup("Saturne", search=fake_search)["qid"], "Q1")  # sans contexte : la première
         self.assertEqual(lookup("Saturne", search=fake_search, context="Saturne planète Astronomie")["qid"], "Q2")
         self.assertEqual(lookup("Saturne", search=fake_search)["others"], ["Q2 : sixième planète du Système solaire"])
+
+    def test_lookup_approximate_hit_is_flagged_not_exact(self):
+        hit = lookup("Comète de Hal", search=lambda term, lang: [{"id": "Q9", "label": "Comète de Halley", "description": "comète"}])
+        self.assertIs(hit["exact"], False)
+
+    def test_lookup_accepts_alias_as_exact(self):
+        hit = lookup("Zed", search=lambda term, lang: [{"id": "Q3", "label": "Zeddy", "description": "x", "match": {"text": "Zed"}}])
+        self.assertIs(hit["exact"], True)
 
     def test_lookup_no_hit(self):
         self.assertIsNone(lookup("Rien", search=lambda term, lang: []))

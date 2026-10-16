@@ -2,6 +2,18 @@
 
 Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versionnement [SemVer](https://semver.org/lang/fr/).
 
+## [0.1.3] - 2026-10-17
+
+### Corrigé
+- Un verdict de vérification inconnu ou incomplet (« doute », « fix » sans texte, « drop » sans cause) était accepté : il est maintenant rejeté et, en mode `new`, retire le mot comme un doute factuel. Les verdicts sont normalisés en minuscules.
+- Une réponse du modèle qui n'est pas un tableau JSON, ou des définitions mal typées, font échouer le lot (signalé, repris à la relance) au lieu de planter l'étape ; `candidates` affiche aussi un message clair dans ce cas.
+- Une coupure de connexion pendant la recherche Wikidata est classée « injoignable ».
+- Le tiret long du contrôle mécanique est écrit en échappement Unicode dans le code et le test.
+- Documentation : alias de libellé pour `exact`, portée de `--rules`, dossier de travail hors du dépôt, essais répétés sur erreur d'API, `source` dans l'exemple de sortie.
+
+### Modifié
+- 36 tests.
+
 ## [0.1.2] - 2026-10-17
 
 ### Corrigé
