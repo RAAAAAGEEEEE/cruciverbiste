@@ -50,7 +50,7 @@ def spent(ledger: Path) -> float:
 
 def ask(prompt: str, model: str, *, ledger: Path, cap: float, stage: str = "",
         system: str | None = None, effort: str | None = None,
-        timeout: int = 900, retries: int = 2) -> str:
+        timeout: int = 900, retries: int = 4) -> str:
     """Envoie `prompt` à `model` et renvoie le texte de la réponse."""
     if not os.environ.get("ANTHROPIC_API_KEY"):
         raise LlmError("ANTHROPIC_API_KEY absente de l'environnement")
@@ -70,6 +70,10 @@ def ask(prompt: str, model: str, *, ledger: Path, cap: float, stage: str = "",
                                   encoding="utf-8", timeout=timeout)
         except subprocess.TimeoutExpired:
             last_error = "délai dépassé"
+            time.sleep(5 * (attempt + 1))
+            continue
+        except OSError as exc:  # binaire introuvable (mise à jour du CLI en cours), manque de ressources
+            last_error = f"commande impossible à lancer : {exc}"
             time.sleep(5 * (attempt + 1))
             continue
         try:

@@ -10,8 +10,11 @@ Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versionnement
 ### Ajouté
 - Les fiches homonymes (jusqu'à trois) sont transmises au rédacteur et au vérificateur, qui ne rejette plus une définition parce qu'elle ne correspond pas à la fiche choisie.
 
+### Corrigé (suite)
+- Une mise à jour du CLI `claude` pendant un long traitement (binaire momentanément introuvable) faisait planter l'étape ; elle est maintenant réessayée (jusqu'à quatre fois, au lieu de deux).
+
 ### Modifié
-- 30 tests au lieu de 29 (ajout du départage des homonymes).
+- 31 tests au lieu de 29.
 
 ## [0.1.0] - 2026-10-16
 

@@ -158,6 +158,16 @@ class PipelineTests(unittest.TestCase):
                 os.environ.clear()
                 os.environ.update(old)
 
+    def test_missing_binary_is_an_llm_error_not_a_crash(self):
+        old = os.environ.copy()
+        os.environ.update({"ANTHROPIC_API_KEY": "test", "CRUCIVERBISTE_CLAUDE_CMD": "commande-qui-n-existe-pas"})
+        try:
+            with self.assertRaises(llm.LlmError):
+                llm.ask("x", "claude-sonnet-5-5", ledger=self.ledger, cap=5, retries=0)
+        finally:
+            os.environ.clear()
+            os.environ.update(old)
+
     def test_missing_key_is_refused(self):
         old = os.environ.pop("ANTHROPIC_API_KEY", None)
         try:

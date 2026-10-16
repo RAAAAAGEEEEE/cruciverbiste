@@ -15,7 +15,7 @@ Chaque flèche est un fichier JSONL (un objet JSON par ligne, UTF-8). Les étape
 
 | Fichier | Rôle |
 |---|---|
-| `scripts/llm.py` | appelle `claude -p --bare` (clé de `ANTHROPIC_API_KEY` uniquement, aucun outil, aucune session), journalise chaque appel dans un registre JSONL, refuse de partir si le plafond est atteint, réessaie deux fois |
+| `scripts/llm.py` | appelle `claude -p --bare` (clé de `ANTHROPIC_API_KEY` uniquement, aucun outil, aucune session), journalise chaque appel dans un registre JSONL, refuse de partir si le plafond est atteint, réessaie quatre fois (délai, sortie illisible, commande momentanément introuvable) |
 | `scripts/run_stage.py` | une étape à modèle : lots, travailleurs parallèles, reprise (les `id` déjà écrits sont sautés), budget |
 | `scripts/prepare_items.py` | normalise les candidats (A à Z), filtre la longueur, écarte les doublons et les mots existants, ajoute la fiche Wikidata (CC0) |
 | `scripts/wikidata.py` | recherche d'une entité par `wbsearchentities`, cache local, pause entre requêtes |
