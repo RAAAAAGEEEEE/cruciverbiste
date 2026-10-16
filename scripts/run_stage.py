@@ -108,8 +108,10 @@ def parse_item(stage: str, raw: dict, item: dict) -> dict:
         out["familiarity"] = int(raw.get("notoriete", 2))
         out["clues"] = [{"level": int(c["niveau"]), "text": str(c["texte"])} for c in raw.get("clues", [])]
     elif stage == "solve":
+        out["for"] = item.get("text")
         out["guesses"] = [str(g) for g in raw.get("reponses", [])]
     elif stage == "verify":
+        out["for"] = item.get("text")
         out["v"] = str(raw.get("v", "drop")).strip().lower()
         if raw.get("texte"):
             out["text"] = str(raw["texte"])

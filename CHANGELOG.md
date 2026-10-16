@@ -2,6 +2,16 @@
 
 Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versionnement [SemVer](https://semver.org/lang/fr/).
 
+## [0.1.5] - 2026-10-17
+
+### Corrigé
+- Une revérification qui répond « fait douteux » (`drop` de cause `fait`, absente ou inconnue, ou verdict imprévu) retire maintenant le mot en mode `new`, comme au premier passage. Un `fix` portant la cause `fait` compte aussi.
+- Les sorties de `solve` et `verify` mémorisent le texte jugé (`for`) ; `finalize` écarte un verdict dont le texte a changé (relance dans un dossier réutilisé avec de nouveaux brouillons). `USAGE.md` demande un dossier de travail neuf par lot.
+- `SKILL.md` : niveaux de preuve alignés sur le code (la résolution à l'aveugle n'est exigée que pour le niveau 1).
+
+### Modifié
+- 38 tests.
+
 ## [0.1.4] - 2026-10-17
 
 ### Corrigé

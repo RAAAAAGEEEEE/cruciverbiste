@@ -149,6 +149,11 @@ def cmd_fix_input(args: argparse.Namespace) -> int:
     return 0
 
 
+def doubtful_cause(cause) -> bool:
+    """Une cause de rejet autre que `ambigu` ou `autre` (absente comprise) est un doute factuel."""
+    return str(cause or "").strip().lower() not in ("ambigu", "autre")
+
+
 def cmd_finalize(args: argparse.Namespace) -> int:
     items = {row["id"]: row for row in read_jsonl(args.items)}
     verdicts = {row["id"]: row for row in read_jsonl(args.verified)}
@@ -172,18 +177,25 @@ def cmd_finalize(args: argparse.Namespace) -> int:
             if verdict is None:
                 rejected.append({"id": cid, "reason": "non vérifiée (résolution ou vérification absente)", "text": clue["text"]})
                 continue
+            if verdict.get("for") not in (None, clue["text"]):
+                rejected.append({"id": cid, "reason": "verdict périmé : le texte a changé depuis la vérification", "text": clue["text"]})
+                continue
             if verdict.get("v") == "drop":
                 rejected.append({"id": cid, "reason": f"vérificateur : {verdict.get('why', '')}", "cause": verdict.get("cause", ""), "text": clue["text"]})
-                factual_doubt = factual_doubt or str(verdict.get("cause") or "").strip().lower() not in ("ambigu", "autre")
+                factual_doubt = factual_doubt or doubtful_cause(verdict.get("cause"))
                 continue
             if verdict.get("v") not in ("ok", "fix") or (verdict.get("v") == "fix" and not verdict.get("text")):
                 rejected.append({"id": cid, "reason": f"verdict inconnu ou incomplet : {verdict.get('v')!r}", "text": clue["text"]})
                 factual_doubt = True
                 continue
             text = clue["text"]
+            if verdict.get("v") == "fix" and str(verdict.get("cause") or "").strip().lower() == "fait":
+                factual_doubt = True
             if verdict.get("v") == "fix" and verdict.get("text"):
-                if rechecks is not None and rechecks.get(cid, {}).get("v") != "ok":
-                    again = rechecks.get(cid, {})
+                again = rechecks.get(cid, {}) if rechecks is not None else {}
+                if rechecks is not None and (again.get("v") != "ok" or again.get("for") not in (None, verdict["text"])):
+                    if again.get("v") == "drop" and doubtful_cause(again.get("cause")) or again.get("v") not in (None, "ok", "fix", "drop"):
+                        factual_doubt = True
                     rejected.append({"id": cid, "reason": "correction non confirmée à la revérification : " + str(again.get("why") or again.get("v") or "absente"),
                                      "text": verdict["text"]})
                     continue
