@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.env
+*.ledger.jsonl
+ledger.jsonl
+wd_cache.json

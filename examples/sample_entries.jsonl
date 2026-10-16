@@ -1,0 +1,3 @@
+{"id": "LUNE", "answer": "LUNE", "display": "", "domain": "astronomie", "source": {"qid": "Q405", "description": "satellite naturel de la Terre"}}
+{"id": "COMETE", "answer": "COMETE", "display": "Comète", "domain": "astronomie", "source": {"qid": "Q3559", "description": "petit corps du système solaire qui développe une chevelure près du Soleil"}}
+{"id": "VOIELACTEE", "answer": "VOIELACTEE", "display": "Voie lactée", "domain": "astronomie", "source": {"qid": "Q321", "description": "galaxie qui contient le Système solaire"}}

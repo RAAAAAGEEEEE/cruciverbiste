@@ -1,0 +1,6 @@
+Contexte du projet (exemple générique, à adapter)
+- Jeu de mots croisés sur l'astronomie amateur, public francophone, définitions en français de France.
+- La rubrique indiquée est le domaine de la réponse : inutile de la répéter dans la définition.
+- Graphies : noms usuels en français (le Soleil, la Voie lactée), sinon nom international.
+- Pas de nom de marque. Pas de personne vivante dans une définition.
+- Rien qui change avec le temps (nombre de lunes connues, records, missions en cours).
