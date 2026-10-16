@@ -2,7 +2,7 @@
 
 Voir aussi : [PRIVACY_AND_SECURITY.md](PRIVACY_AND_SECURITY.md), [../README.md](../README.md).
 
-Statut : alpha, version 0.1.5 (17/10/2026).
+Statut : alpha, version 0.1.6 (17/10/2026).
 
 ## Exactitude des faits
 

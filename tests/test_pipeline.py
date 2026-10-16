@@ -165,6 +165,68 @@ class PipelineTests(unittest.TestCase):
         kept = read_jsonl(self.dir / "accepted.jsonl")[0]["clues"]
         self.assertEqual([c["level"] for c in kept], [2, 3], "verdict périmé : définition écartée")
 
+    def clues4(self, word: str) -> None:
+        write_jsonl(self.dir / "items.jsonl", [{"id": word, "answer": word, "display": "", "domain": "d", "clues": []}])
+        write_jsonl(self.dir / "drafts.jsonl", [{"id": word, "familiarity": 1, "clues": [
+            {"level": 1, "text": "Porte nette"}, {"level": 2, "text": "Moyen précis"},
+            {"level": 2, "text": "Autre moyen net"}, {"level": 3, "text": "Allusion fine"}]}])
+
+    def finalize(self, *extra: str) -> list:
+        self.run_script("combine.py", "finalize", "items.jsonl", "drafts.jsonl", "verified.jsonl", "accepted.jsonl",
+                        "rejected.jsonl", *extra)
+        return read_jsonl(self.dir / "accepted.jsonl")
+
+    def test_doubt_rules_with_enough_clues(self):
+        self.clues4("INDIA")
+        base = [{"id": "INDIA#1#0", "v": "ok"}, {"id": "INDIA#2#1", "v": "ok"}, {"id": "INDIA#3#3", "v": "ok"}]
+        third = "INDIA#2#2"
+        for verdict in ({"v": "doute"}, {"v": "drop", "cause": "fait"}, {"v": "drop"}, {"v": "fix", "text": "Autre moyen sûr", "cause": "fait"}):
+            write_jsonl(self.dir / "verified.jsonl", base + [{"id": third, **verdict}])
+            write_jsonl(self.dir / "rechecked.jsonl", [{"id": third, "v": "ok"}])
+            self.assertEqual(self.finalize("--recheck", "rechecked.jsonl"), [], f"{verdict} : mot retiré")
+            self.assertEqual(len(self.finalize("--recheck", "rechecked.jsonl", "--keep-on-doubt")[0]["clues"]), 3 if verdict["v"] != "fix" else 4)
+            self.assertEqual(len(self.finalize("--mode", "extra", "--recheck", "rechecked.jsonl")[0]["clues"]), 3 if verdict["v"] != "fix" else 4)
+        write_jsonl(self.dir / "verified.jsonl", base + [{"id": third, "v": "drop", "cause": "ambigu"}])
+        self.assertEqual(len(self.finalize()[0]["clues"]), 3, "ambigu : seule la définition tombe")
+        write_jsonl(self.dir / "verified.jsonl", base + [{"id": third, "v": "fix", "text": "Moyen corrigé net"}])
+        write_jsonl(self.dir / "rechecked.jsonl", [{"id": third, "v": "drop", "cause": "fait"}])
+        self.assertEqual(self.finalize("--recheck", "rechecked.jsonl"), [], "revérification douteuse : mot retiré")
+        write_jsonl(self.dir / "rechecked.jsonl", [{"id": third, "v": "fix", "text": "x", "cause": "fait"}])
+        self.assertEqual(self.finalize("--recheck", "rechecked.jsonl"), [], "revérification fix de cause fait : mot retiré")
+        write_jsonl(self.dir / "rechecked.jsonl", [{"id": third, "v": "ok", "for": "Autre texte"}])
+        self.assertEqual(len(self.finalize("--recheck", "rechecked.jsonl", "--keep-on-doubt")[0]["clues"]), 3, "revérification périmée")
+
+    def test_minimums(self):
+        self.clues4("JULIET")
+        write_jsonl(self.dir / "verified.jsonl", [{"id": "JULIET#1#0", "v": "ok"}, {"id": "JULIET#2#1", "v": "drop", "cause": "autre"},
+                                                  {"id": "JULIET#2#2", "v": "drop", "cause": "autre"}, {"id": "JULIET#3#3", "v": "ok"}])
+        self.assertEqual(len(self.finalize()[0]["clues"]), 2)
+        self.assertEqual(self.finalize("--min-clues", "3"), [], "minimum de définitions")
+        write_jsonl(self.dir / "verified.jsonl", [{"id": "JULIET#1#0", "v": "drop", "cause": "autre"}, {"id": "JULIET#2#1", "v": "drop", "cause": "autre"},
+                                                  {"id": "JULIET#2#2", "v": "drop", "cause": "autre"}, {"id": "JULIET#3#3", "v": "ok"}])
+        self.assertEqual(self.finalize("--min-clues", "1"), [], "un mur seul ne suffit pas en mode new")
+
+    def test_unsolved_level1_and_stale_solutions_are_dropped(self):
+        self.clues4("KILO")
+        write_jsonl(self.dir / "solved.jsonl", [
+            {"id": "KILO#1#0", "guesses": ["AUTRE"], "for": "Porte nette"},
+            {"id": "KILO#2#1", "guesses": ["AUTRE"], "for": "Moyen précis"},
+            {"id": "KILO#2#2", "guesses": ["KILO"], "for": "Ancien texte"},
+            {"id": "KILO#3#3", "guesses": ["KILO"]}])
+        out = json.loads(self.run_script("combine.py", "verify-input", "items.jsonl", "drafts.jsonl", "solved.jsonl", "verify_in.jsonl").strip())
+        self.assertEqual(out["dropped_unsolved"], 2, "niveau 1 non résolu et résolution périmée")
+        self.assertEqual(sorted(r["id"] for r in read_jsonl(self.dir / "verify_in.jsonl")), ["KILO#2#1", "KILO#3#3"])
+
+    def test_stages_record_the_judged_text(self):
+        write_jsonl(self.dir / "items.jsonl", [{"id": "LIMA", "answer": "LIMA", "display": "", "domain": "d", "clues": []}])
+        write_jsonl(self.dir / "solve_in.jsonl", [{"id": "LIMA#1#0", "pattern": "4", "domain": "d", "text": "Porte nette", "answer": "LIMA"}])
+        self.stage("solve", self.dir / "solve_in.jsonl", self.dir / "solved.jsonl")
+        self.assertEqual(read_jsonl(self.dir / "solved.jsonl")[0]["for"], "Porte nette")
+        write_jsonl(self.dir / "verify_in.jsonl", [{"id": "LIMA#1#0", "answer": "LIMA", "display": "", "domain": "d", "level": 1,
+                                                    "text": "Porte nette", "others": [], "guesses": []}])
+        self.stage("verify", self.dir / "verify_in.jsonl", self.dir / "verified.jsonl")
+        self.assertEqual(read_jsonl(self.dir / "verified.jsonl")[0]["for"], "Porte nette")
+
     def test_resume_only_processes_missing_items(self):
         items = [{"id": f"MOT{i}", "answer": f"MOT{i}", "display": "", "domain": "d", "clues": []} for i in range(4)]
         write_jsonl(self.dir / "items.jsonl", items)

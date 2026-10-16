@@ -109,6 +109,8 @@ class PrepareTests(unittest.TestCase):
         reasons = " | ".join(r["reason"] for r in rejected)
         self.assertIn("non concordante", reasons)
         self.assertIn("injoignable", reasons)
+        kept, rejected = prepare(rows[:1], set(), min_len=3, max_len=13, resolve=lambda t, c="": {"qid": "Q1"})
+        self.assertEqual(kept, [], "fiche sans champ exact : rejetée")
 
     def test_prepare_without_wikidata(self):
         kept, rejected = prepare([{"form": "Zelda", "domain": "jeux"}], set(), min_len=3, max_len=13)

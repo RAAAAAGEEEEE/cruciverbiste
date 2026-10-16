@@ -100,7 +100,7 @@ def solved_guess(guesses: list[str], answer: str) -> bool:
 
 def cmd_verify_input(args: argparse.Namespace) -> int:
     items = {row["id"]: row for row in read_jsonl(args.items)}
-    solved = {row["id"]: row.get("guesses", []) for row in read_jsonl(args.solved)}
+    solved_rows = {row["id"]: row for row in read_jsonl(args.solved)}
     rows: list[dict] = []
     dropped: list[dict] = []
     for draft in read_jsonl(args.drafts):
@@ -111,9 +111,12 @@ def cmd_verify_input(args: argparse.Namespace) -> int:
         texts = existing_texts(item) + [c["text"] for c in good]
         for clue in good:
             cid = clue_id(item["id"], clue["level"], clue["n"])
-            if cid not in solved:
+            if cid not in solved_rows:
                 continue
-            guesses = solved[cid]
+            if solved_rows[cid].get("for") not in (None, clue["text"]):
+                dropped.append({"id": cid, "text": clue["text"], "reason": "résolution périmée : le texte a changé depuis la résolution"})
+                continue
+            guesses = solved_rows[cid].get("guesses", [])
             if clue["level"] in args.drop_unsolved_level and not solved_guess(guesses, item["answer"]):
                 dropped.append({"id": cid, "text": clue["text"], "reason": f"non résolue à l'aveugle (niveau {clue['level']}) : {guesses}"})
                 continue
@@ -194,7 +197,8 @@ def cmd_finalize(args: argparse.Namespace) -> int:
             if verdict.get("v") == "fix" and verdict.get("text"):
                 again = rechecks.get(cid, {}) if rechecks is not None else {}
                 if rechecks is not None and (again.get("v") != "ok" or again.get("for") not in (None, verdict["text"])):
-                    if again.get("v") == "drop" and doubtful_cause(again.get("cause")) or again.get("v") not in (None, "ok", "fix", "drop"):
+                    if again.get("v") == "drop" and doubtful_cause(again.get("cause")) or again.get("v") not in (None, "ok", "fix", "drop") \
+                            or again.get("v") == "fix" and str(again.get("cause") or "").strip().lower() == "fait":
                         factual_doubt = True
                     rejected.append({"id": cid, "reason": "correction non confirmée à la revérification : " + str(again.get("why") or again.get("v") or "absente"),
                                      "text": verdict["text"]})

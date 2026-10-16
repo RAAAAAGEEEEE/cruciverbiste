@@ -2,6 +2,17 @@
 
 Format : [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/), versionnement [SemVer](https://semver.org/lang/fr/).
 
+## [0.1.6] - 2026-10-17
+
+### Corrigé
+- `verify-input` écarte une résolution à l'aveugle faite sur un ancien texte (« résolution périmée ») au lieu de la présenter comme preuve.
+- Une revérification `fix` de cause `fait` retire le mot en mode `new`.
+- Tests : les identifiants des tests précédents ne correspondaient pas au format `RÉPONSE#niveau#indice` (tests vacueux) ; ils sont corrigés et 4 tests couvrent maintenant les règles de doute, les minimums, les niveaux non résolus et l'enregistrement du texte jugé (vérifié par mutation).
+- `SKILL.md` : une correction n'est revérifiée qu'avec `--recheck`.
+
+### Modifié
+- 42 tests.
+
 ## [0.1.5] - 2026-10-17
 
 ### Corrigé
